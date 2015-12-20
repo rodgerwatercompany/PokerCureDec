@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace YCurl
+namespace Rodger
 {
+
     public class TouchPlane : MonoBehaviour
     {
 
         Ray ray;
-
 
         private Camera m_camera;
 
@@ -20,27 +20,82 @@ namespace YCurl
         Vector2 dir;
         Vector2 normal;
 
+
         private Vector2 Voffest;
 
         void Awake()
         {
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
         }
+
         // Use this for initialization
         void Start()
         {
+
             sw_drag = false;
             Voffest = new Vector2(0.5f, 0.5f);
-            /*
-            dir = new Vector2(1, 1);
-            print(dir.magnitude);
-            normal = new Vector2(-dir.y / dir.magnitude, dir.x / dir.magnitude);
+			
+			dir = new Vector2(-1,-1);
+			
+			//print("dir " + dir);
+			
+			// dir , v(1,0)
+			/*
+			float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y/dir.x);
+			if(dir.x <= 0 && dir.y >=0)
+				theta_pos += 90;
+			else if(dir.x <= 0 && dir.y <=0)
+				theta_pos += 180;
+			else if(dir.x >= 0 && dir.y <= 0)
+				theta_pos += 270;
+			print ("theta_pos is " + theta_pos);*/
 
-            print("normal " + normal.x + " " + normal.y);
-            float dot = dir.x * normal.x + dir.y * normal.y;
 
-            print("dot is " + dot);
-            print("dir " + dir + "(" + dir.x + " , " + dir.y + ")");*/
+			normal = new Vector2 (1, 1);
+			float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
+			print ("theta_rot is " + theta_rot);
+
+			if (normal.x >= 0 && normal.y <= 0)
+				theta_rot += 90;
+			else if (normal.x <= 0 && normal.y <= 0)
+				theta_rot += 180;
+			else if (normal.x <= 0 && normal.y >= 0)
+				theta_rot += 270;
+
+			normal = new Vector2 (1, -1);
+			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
+			
+			if (normal.x >= 0 && normal.y <= 0)
+				theta_rot += 90;
+			else if (normal.x <= 0 && normal.y <= 0)
+				theta_rot += 180;
+			else if (normal.x <= 0 && normal.y >= 0)
+				theta_rot += 270;
+			print ("theta_rot is " + theta_rot);
+			
+			normal = new Vector2 (-1, -1);
+			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
+			
+			if (normal.x >= 0 && normal.y <= 0)
+				theta_rot += 90;
+			else if (normal.x <= 0 && normal.y <= 0)
+				theta_rot += 180;
+			else if (normal.x <= 0 && normal.y >= 0)
+				theta_rot += 270;
+			print ("theta_rot is " + theta_rot);
+			
+			normal = new Vector2 (-1, 1);
+			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
+			
+			if (normal.x >= 0 && normal.y <= 0)
+				theta_rot += 90;
+			else if (normal.x <= 0 && normal.y <= 0)
+				theta_rot += 180;
+			else if (normal.x <= 0 && normal.y >= 0)
+				theta_rot += 270;
+			print ("theta_rot is " + theta_rot);
+
+			
         }
 
         void aUpdate()
@@ -84,7 +139,16 @@ namespace YCurl
                     {
                         this.firsttouch = new Vector2(hit.textureCoord.x, hit.textureCoord.y) - Voffest;
                         print(firsttouch.x + " " + firsttouch.y);
-                        sw_drag = true;
+
+						if(firsttouch.x > .1f && firsttouch.x < .9f && firsttouch.y > .1f && firsttouch.y < .9f)
+						{
+							print ("Not Allow");
+							return;
+						}
+						else
+						{
+                        	sw_drag = true;
+						}
                     }
                 }
             }
@@ -109,29 +173,43 @@ namespace YCurl
 
                         print("dir " + dir);
                         
-                        normal = new Vector2(- Mathf.Abs(dir.y) / dir.magnitude, Mathf.Abs(dir.x) / dir.magnitude);
+						// theta between dir , v(1,0)
+						float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y / dir.x);
+						print ("theta_pos is " + theta_pos);
 
+						if(dir.x <= 0 && dir.y >=0)
+							theta_pos += 90;
+						else if(dir.x <= 0 && dir.y <=0)
+							theta_pos += 180;
+						else if(dir.x >= 0 && dir.y <= 0)
+							theta_pos += 270;
+
+						//normal = new Vector2(dir.x * Mathf.Cos(-3.1416 / 2) - dir.y * Mathf.Sin (-3.1416 / 2) , dir.y * Mathf.Cos(-3.1416 / 2) + dir.x * Mathf.Sin (-3.1416 / 2));
+                        // To simply
+						normal = new Vector2(dir.y , -dir.x);
+
+						// theta between (0,1) , nor
+						float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
+
+
+						//normal = new Vector2(- Mathf.Abs(dir.y) / dir.magnitude, Mathf.Abs(dir.x) / dir.magnitude);
+
+						/*
                         print("normal " + normal.x + " " + normal.y);
                         float dot = dir.x * normal.x + dir.y * normal.y;
 
                         print("dot is " + dot);
                         print("dir " + dir + "(" + dir.x + " , " + dir.y + ")");
 
-                        float temp = normal.y / normal.magnitude;
+						float temp = normal.y / Mathf.Abs(normal.magnitude);
                         float theta = Mathf.Acos(temp);
-                        print(theta * Mathf.Rad2Deg);
+                        print(theta * Mathf.Rad2Deg);*/
                         //pokerobject.DoBend(this.firsttouch, new Vector2(pos_mouse.x, pos_mouse.z));
                     }
                 }
             }
 
 
-        }
-
-        void DoBend()
-        {
-
-            // let 0.5,0.5 to center poin.
         }
         /*
         void OnGUI()

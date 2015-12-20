@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UseMaskObject : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+namespace Rodger{
+	public class UseMaskObject : MonoBehaviour {
+
+
+		void Awake(){
+		}
+
+		// Use this for initialization
+		void Start () {
+		
+		}
+
+		void Cooperation(float rotate)
+		{
+			transform.localRotation = Quaternion.Euler (0, 0, rotate);
+		}
 	}
 }
