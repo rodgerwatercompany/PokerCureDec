@@ -10,6 +10,7 @@ namespace Rodger
         Ray ray;
 
         private Camera m_camera;
+        private MaskObject maskObj;
 
         private bool sw_drag;
 
@@ -26,6 +27,8 @@ namespace Rodger
         void Awake()
         {
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
+
+            maskObj = GameObject.Find("MaskObject").GetComponent<MaskObject>();
         }
 
         // Use this for initialization
@@ -34,8 +37,11 @@ namespace Rodger
 
             sw_drag = false;
             Voffest = new Vector2(0.5f, 0.5f);
-			
-			dir = new Vector2(-1,-1);
+
+            Vector2 vec = new Vector2(-0.9587f,0.1711f);
+
+            // Test Dir
+			//dir = new Vector2(-1,-1);
 			
 			//print("dir " + dir);
 			
@@ -49,8 +55,8 @@ namespace Rodger
 			else if(dir.x >= 0 && dir.y <= 0)
 				theta_pos += 270;
 			print ("theta_pos is " + theta_pos);*/
-
-
+            // Test Normal
+            /*
 			normal = new Vector2 (1, 1);
 			float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
 			print ("theta_rot is " + theta_rot);
@@ -94,10 +100,10 @@ namespace Rodger
 			else if (normal.x <= 0 && normal.y >= 0)
 				theta_rot += 270;
 			print ("theta_rot is " + theta_rot);
-
+            */
 			
         }
-
+        /*
         void aUpdate()
         {
 
@@ -121,7 +127,7 @@ namespace Rodger
                     print(str);
                 }
             }        
-        }
+        }*/
 
         // Update is called once per frame
         void Update()
@@ -157,9 +163,6 @@ namespace Rodger
             {
                 pos_mouse = Vector2.zero;
                 sw_drag = false;
-
-                //pokerobject.Release();
-
             }
 
             if (sw_drag)
@@ -168,14 +171,24 @@ namespace Rodger
                 {
                     if (hit.collider.name == "TouchPlane")
                     {
+                        string str_debug = "";
                         pos_mouse = hit.textureCoord - Voffest;
-                        dir = -(firsttouch - pos_mouse);
+                        Vector2 pos = Vector2.zero;
+                        pos.x = 400 * pos_mouse.x;
+                        pos.y = 600 * pos_mouse.y;
 
-                        print("dir " + dir);
-                        
-						// theta between dir , v(1,0)
-						float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y / dir.x);
-						print ("theta_pos is " + theta_pos);
+                        str_debug += "pos is " + pos.x + " , " + pos.y + "\n";
+
+                        dir = -(firsttouch - pos_mouse);
+                        str_debug += "dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse + "\n";
+                        //print("dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse);
+
+                        // theta between dir , v(1,0)
+                        float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y / dir.x);
+
+                        theta_pos = Mathf.Abs(theta_pos);
+                        str_debug += "theta_pos is " + theta_pos + "\n";
+                        //print ("theta_pos is " + theta_pos);
 
 						if(dir.x <= 0 && dir.y >=0)
 							theta_pos += 90;
@@ -184,27 +197,34 @@ namespace Rodger
 						else if(dir.x >= 0 && dir.y <= 0)
 							theta_pos += 270;
 
-						//normal = new Vector2(dir.x * Mathf.Cos(-3.1416 / 2) - dir.y * Mathf.Sin (-3.1416 / 2) , dir.y * Mathf.Cos(-3.1416 / 2) + dir.x * Mathf.Sin (-3.1416 / 2));
+                        str_debug += "theta_pos is changed to " + theta_pos + "\n";
+                        //print("theta_pos is changed to " + theta_pos);
+                        //normal = new Vector2(dir.x * Mathf.Cos(-3.1416 / 2) - dir.y * Mathf.Sin (-3.1416 / 2) , dir.y * Mathf.Cos(-3.1416 / 2) + dir.x * Mathf.Sin (-3.1416 / 2));
                         // To simply
-						normal = new Vector2(dir.y , -dir.x);
+                        normal = new Vector2(dir.y , -dir.x);
 
-						// theta between (0,1) , nor
-						float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
+                        str_debug += "normal " + normal.x + " , " + normal.y + "\n";
+                        // theta between (0,1) , nor
+                        float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
+
+                        //theta_rot = Mathf.Abs(theta_rot);
+
+                        str_debug += "theta_rot is " + theta_rot + "\n";
+                        //print("theta_rot is " + theta_rot);
+
+                        if (normal.x >= 0 && normal.y <= 0)
+                            theta_rot += 90;
+                        else if (normal.x <= 0 && normal.y <= 0)
+                            theta_rot += 180;
+                        else if (normal.x <= 0 && normal.y >= 0)
+                            theta_rot += 270;
 
 
-						//normal = new Vector2(- Mathf.Abs(dir.y) / dir.magnitude, Mathf.Abs(dir.x) / dir.magnitude);
+                        str_debug += "theta_rot is changed to " + theta_rot + "\n";
 
-						/*
-                        print("normal " + normal.x + " " + normal.y);
-                        float dot = dir.x * normal.x + dir.y * normal.y;
-
-                        print("dot is " + dot);
-                        print("dir " + dir + "(" + dir.x + " , " + dir.y + ")");
-
-						float temp = normal.y / Mathf.Abs(normal.magnitude);
-                        float theta = Mathf.Acos(temp);
-                        print(theta * Mathf.Rad2Deg);*/
-                        //pokerobject.DoBend(this.firsttouch, new Vector2(pos_mouse.x, pos_mouse.z));
+                        print(str_debug);
+                        if (!float.IsNaN(theta_pos))
+                            maskObj.DoMask(pos, theta_pos, theta_rot);
                     }
                 }
             }

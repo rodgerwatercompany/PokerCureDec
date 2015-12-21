@@ -14,9 +14,10 @@ namespace Rodger{
 		
 		}
 
-		void Cooperation(float rotate)
+		public void Cooperation()
 		{
-			transform.localRotation = Quaternion.Euler (0, 0, rotate);
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
 		}
 	}
 }
