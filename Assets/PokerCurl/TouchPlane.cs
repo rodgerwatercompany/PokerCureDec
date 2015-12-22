@@ -14,7 +14,6 @@ namespace Rodger
 
         private bool sw_drag;
 
-
         private Vector2 firsttouch;
 
         Vector2 pos_mouse;
@@ -36,72 +35,7 @@ namespace Rodger
         {
 
             sw_drag = false;
-            Voffest = new Vector2(0.5f, 0.5f);
-
-            Vector2 vec = new Vector2(-0.9587f,0.1711f);
-
-            // Test Dir
-			//dir = new Vector2(-1,-1);
-			
-			//print("dir " + dir);
-			
-			// dir , v(1,0)
-			/*
-			float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y/dir.x);
-			if(dir.x <= 0 && dir.y >=0)
-				theta_pos += 90;
-			else if(dir.x <= 0 && dir.y <=0)
-				theta_pos += 180;
-			else if(dir.x >= 0 && dir.y <= 0)
-				theta_pos += 270;
-			print ("theta_pos is " + theta_pos);*/
-            // Test Normal
-            /*
-			normal = new Vector2 (1, 1);
-			float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
-			print ("theta_rot is " + theta_rot);
-
-			if (normal.x >= 0 && normal.y <= 0)
-				theta_rot += 90;
-			else if (normal.x <= 0 && normal.y <= 0)
-				theta_rot += 180;
-			else if (normal.x <= 0 && normal.y >= 0)
-				theta_rot += 270;
-
-			normal = new Vector2 (1, -1);
-			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
-			
-			if (normal.x >= 0 && normal.y <= 0)
-				theta_rot += 90;
-			else if (normal.x <= 0 && normal.y <= 0)
-				theta_rot += 180;
-			else if (normal.x <= 0 && normal.y >= 0)
-				theta_rot += 270;
-			print ("theta_rot is " + theta_rot);
-			
-			normal = new Vector2 (-1, -1);
-			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
-			
-			if (normal.x >= 0 && normal.y <= 0)
-				theta_rot += 90;
-			else if (normal.x <= 0 && normal.y <= 0)
-				theta_rot += 180;
-			else if (normal.x <= 0 && normal.y >= 0)
-				theta_rot += 270;
-			print ("theta_rot is " + theta_rot);
-			
-			normal = new Vector2 (-1, 1);
-			theta_rot = Mathf.Abs(Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y));
-			
-			if (normal.x >= 0 && normal.y <= 0)
-				theta_rot += 90;
-			else if (normal.x <= 0 && normal.y <= 0)
-				theta_rot += 180;
-			else if (normal.x <= 0 && normal.y >= 0)
-				theta_rot += 270;
-			print ("theta_rot is " + theta_rot);
-            */
-			
+            Voffest = new Vector2(0.5f, 0.5f);			
         }
         /*
         void aUpdate()
@@ -132,6 +66,7 @@ namespace Rodger
         // Update is called once per frame
         void Update()
         {
+
             RaycastHit hit;
             //ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             
@@ -143,10 +78,8 @@ namespace Rodger
                 {
                     if (hit.collider.name == "TouchPlane")
                     {
-                        this.firsttouch = new Vector2(hit.textureCoord.x, hit.textureCoord.y) - Voffest;
-                        print(firsttouch.x + " " + firsttouch.y);
 
-						if(firsttouch.x > .1f && firsttouch.x < .9f && firsttouch.y > .1f && firsttouch.y < .9f)
+						if(hit.textureCoord.x > .1f && hit.textureCoord.x < .9f && hit.textureCoord.y > .1f && hit.textureCoord.y < .9f)
 						{
 							print ("Not Allow");
 							return;
@@ -154,6 +87,19 @@ namespace Rodger
 						else
 						{
                         	sw_drag = true;
+                            Vector2 hit_fixed = hit.textureCoord;
+                            
+                            if (hit_fixed.x < .1f)
+                                hit_fixed.x = 0;
+                            else if(hit_fixed.x > .9f)
+                                hit_fixed.x = 1;
+                            else if (hit_fixed.y < .1f)
+                                hit_fixed.y = 0;
+                            else if (hit_fixed.y > .9f)
+                                hit_fixed.y = 1;
+
+                            this.firsttouch = hit_fixed - Voffest;
+                            print(hit_fixed.x + " " + hit_fixed.y + " , " + hit.textureCoord.x + " " + hit.textureCoord.y);
 						}
                     }
                 }
@@ -163,6 +109,8 @@ namespace Rodger
             {
                 pos_mouse = Vector2.zero;
                 sw_drag = false;
+
+                maskObj.ResetMask();
             }
 
             if (sw_drag)
@@ -184,43 +132,32 @@ namespace Rodger
                         //print("dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse);
 
                         // theta between dir , v(1,0)
-                        float theta_pos = Mathf.Rad2Deg * Mathf.Atan(dir.y / dir.x);
+                        float theta_pos = GetTheta(Vector2.right, dir);
 
-                        theta_pos = Mathf.Abs(theta_pos);
                         str_debug += "theta_pos is " + theta_pos + "\n";
-                        //print ("theta_pos is " + theta_pos);
-
-						if(dir.x <= 0 && dir.y >=0)
-							theta_pos += 90;
-						else if(dir.x <= 0 && dir.y <=0)
-							theta_pos += 180;
-						else if(dir.x >= 0 && dir.y <= 0)
-							theta_pos += 270;
-
-                        str_debug += "theta_pos is changed to " + theta_pos + "\n";
-                        //print("theta_pos is changed to " + theta_pos);
+                        
                         //normal = new Vector2(dir.x * Mathf.Cos(-3.1416 / 2) - dir.y * Mathf.Sin (-3.1416 / 2) , dir.y * Mathf.Cos(-3.1416 / 2) + dir.x * Mathf.Sin (-3.1416 / 2));
                         // To simply
                         normal = new Vector2(dir.y , -dir.x);
 
                         str_debug += "normal " + normal.x + " , " + normal.y + "\n";
                         // theta between (0,1) , nor
-                        float theta_rot = Mathf.Rad2Deg * Mathf.Atan(normal.x / normal.y);
+                        float theta_rot = 360 - GetTheta(Vector2.up, normal);
 
                         //theta_rot = Mathf.Abs(theta_rot);
 
                         str_debug += "theta_rot is " + theta_rot + "\n";
                         //print("theta_rot is " + theta_rot);
-
+                        /*
                         if (normal.x >= 0 && normal.y <= 0)
                             theta_rot += 90;
                         else if (normal.x <= 0 && normal.y <= 0)
                             theta_rot += 180;
                         else if (normal.x <= 0 && normal.y >= 0)
                             theta_rot += 270;
+                            */
 
-
-                        str_debug += "theta_rot is changed to " + theta_rot + "\n";
+                        //str_debug += "theta_rot is changed to " + theta_rot + "\n";
 
                         print(str_debug);
                         if (!float.IsNaN(theta_pos))
@@ -231,11 +168,28 @@ namespace Rodger
 
 
         }
-        /*
-        void OnGUI()
+
+        // Units in degree.
+        float GetTheta(Vector2 vec_a,Vector2 vec_b)
         {
-            GUILayout.Label("First Pos " + this.firsttouch.x + " " + this.firsttouch.y);
-            GUILayout.Label("hit x is " + pos_mouse.x +  " , z is " + pos_mouse.z);
-        }*/
+            float val = Vector3.Cross(vec_a, vec_b).z;
+            if (val > 0)
+            {
+                float temp = Vector2.Dot(vec_a, vec_b) / (vec_a.magnitude * vec_b.magnitude);
+                return (Mathf.Acos(temp) * Mathf.Rad2Deg);
+            }
+            else if (val < 0)
+            {
+                float temp = Vector2.Dot(vec_a, vec_b) / (vec_a.magnitude * vec_b.magnitude);
+                return 360 - (Mathf.Acos(temp) * Mathf.Rad2Deg);
+            }
+            else
+            {
+                if (vec_a == -vec_b)
+                    return 180;
+                else
+                    return 0;
+            }
+        }
     }
 }

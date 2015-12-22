@@ -3,16 +3,8 @@ using System.Collections;
 
 
 namespace Rodger{
-	public class UseMaskObject : MonoBehaviour {
-
-
-		void Awake(){
-		}
-
-		// Use this for initialization
-		void Start () {
-		
-		}
+	public class UseMaskObject : MonoBehaviour
+    {        
 
 		public void Cooperation()
 		{

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace Rodger{
-	public class MaskObject : MonoBehaviour {
+namespace Rodger
+{
+    public class MaskObject : MonoBehaviour {
 
 	    UIPanel m_Panel;
 	    UseMaskObject m_usemaskObj;
@@ -40,10 +40,11 @@ namespace Rodger{
 
 		public void DoMask(Vector2 pos, float theta_pos, float theta_rotate)
 		{
+            /*
             string str = "";
             str += "pos " + pos + "\n";
             str += "theta_pos " + theta_pos + "\n";
-            str += "theta_rotate " + theta_rotate + "\n";
+            str += "theta_rotate " + theta_rotate + "\n";*/
             //print(str);
 
             Vector2 offset = Vector2.zero;
@@ -59,7 +60,7 @@ namespace Rodger{
             m_usemaskObj.Cooperation();
         }
         
-        void ResetMask()
+        public void ResetMask()
         {
             m_Panel.gameObject.transform.localPosition = Vector2.zero;
 
