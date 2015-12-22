@@ -10,10 +10,6 @@ namespace Rodger
 	    float m_width ;
 	    float m_height;
 
-        public Vector2 tpos;
-        public float tthetapos;
-		public float tthetarotate;
-
 	    void Awake()
 	    {
 	        m_Panel = GetComponent<UIPanel>();
@@ -25,18 +21,6 @@ namespace Rodger
 	            Debug.LogError("Can't find UseMaskObject.");
 
 	    }
-
-        void OnGUI()
-        {
-            if (GUILayout.Button("DoMask"))
-            {
-                DoMask(tpos, tthetapos, tthetarotate);
-            }
-            else if (GUILayout.Button("ResetMask"))
-            {
-                ResetMask();
-            }
-        }
 
 		public void DoMask(Vector2 pos, float theta_pos, float theta_rotate)
 		{
@@ -54,7 +38,7 @@ namespace Rodger
 
             //m_Panel.clipOffset = offset;
             //print("offset " + offset);
-            transform.localRotation = Quaternion.Euler(0,0,-theta_rotate);
+            transform.localRotation = Quaternion.Euler(0,0,theta_rotate);
             transform.localPosition = offset;
             
             m_usemaskObj.Cooperation();

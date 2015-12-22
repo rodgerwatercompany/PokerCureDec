@@ -10,7 +10,8 @@ namespace Rodger
         Ray ray;
 
         private Camera m_camera;
-        private MaskObject maskObj;
+        private MaskObject maskObj_DW;
+        
 
         private bool sw_drag;
 
@@ -27,7 +28,7 @@ namespace Rodger
         {
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
 
-            maskObj = GameObject.Find("MaskObject").GetComponent<MaskObject>();
+            maskObj_DW = GameObject.Find("MaskObject").GetComponent<MaskObject>();
         }
 
         // Use this for initialization
@@ -35,40 +36,14 @@ namespace Rodger
         {
 
             sw_drag = false;
-            Voffest = new Vector2(0.5f, 0.5f);			
+            Voffest = new Vector2(0.5f, 0.5f);
         }
-        /*
-        void aUpdate()
-        {
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-                //ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                ray = m_camera.ScreenPointToRay(Input.mousePosition);
-                print("ray " + ray);
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                {
-                    string str = "";
-                    str += "bs is " + hit.barycentricCoordinate.x + "," + hit.barycentricCoordinate.y + "\n";
-                    //str += "collider is " + hit..c + "," + hit.collider.y + "\n";
-                    str += "point is " + hit.point.x + "," + hit.point.y + "\n";
-                    str += "textureCoord is " + hit.textureCoord.x + "," + hit.textureCoord.y + "\n";
-                    str += "textureCoord2 is " + hit.textureCoord2.x + "," + hit.textureCoord2.y + "\n";
-                    str += "transform is " + hit.transform.localPosition.x + "," + hit.transform.localPosition.y + "\n";
-                    str += "triangleIndex is " + hit.triangleIndex + "\n";
-                    print(str);
-                }
-            }        
-        }*/
 
         // Update is called once per frame
         void Update()
         {
 
             RaycastHit hit;
-            //ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             
             ray = m_camera.ScreenPointToRay(Input.mousePosition);
 
@@ -99,7 +74,7 @@ namespace Rodger
                                 hit_fixed.y = 1;
 
                             this.firsttouch = hit_fixed - Voffest;
-                            print(hit_fixed.x + " " + hit_fixed.y + " , " + hit.textureCoord.x + " " + hit.textureCoord.y);
+                            //print(hit_fixed.x + " " + hit_fixed.y + " , " + hit.textureCoord.x + " " + hit.textureCoord.y);
 						}
                     }
                 }
@@ -110,7 +85,7 @@ namespace Rodger
                 pos_mouse = Vector2.zero;
                 sw_drag = false;
 
-                maskObj.ResetMask();
+                maskObj_DW.ResetMask();
             }
 
             if (sw_drag)
@@ -125,12 +100,12 @@ namespace Rodger
                         pos.x = 400 * pos_mouse.x;
                         pos.y = 600 * pos_mouse.y;
 
+                        #region Down
                         str_debug += "pos is " + pos.x + " , " + pos.y + "\n";
 
                         dir = -(firsttouch - pos_mouse);
                         str_debug += "dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse + "\n";
-                        //print("dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse);
-
+                        
                         // theta between dir , v(1,0)
                         float theta_pos = GetTheta(Vector2.right, dir);
 
@@ -144,24 +119,12 @@ namespace Rodger
                         // theta between (0,1) , nor
                         float theta_rot = 360 - GetTheta(Vector2.up, normal);
 
-                        //theta_rot = Mathf.Abs(theta_rot);
-
                         str_debug += "theta_rot is " + theta_rot + "\n";
-                        //print("theta_rot is " + theta_rot);
-                        /*
-                        if (normal.x >= 0 && normal.y <= 0)
-                            theta_rot += 90;
-                        else if (normal.x <= 0 && normal.y <= 0)
-                            theta_rot += 180;
-                        else if (normal.x <= 0 && normal.y >= 0)
-                            theta_rot += 270;
-                            */
 
-                        //str_debug += "theta_rot is changed to " + theta_rot + "\n";
-
-                        print(str_debug);
+                        //print(str_debug);
                         if (!float.IsNaN(theta_pos))
-                            maskObj.DoMask(pos, theta_pos, theta_rot);
+                            maskObj_DW.DoMask(pos, theta_pos, -theta_rot);
+                        #endregion
                     }
                 }
             }
