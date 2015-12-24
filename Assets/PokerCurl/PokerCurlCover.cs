@@ -4,12 +4,21 @@ using System;
 
 namespace Rodger
 {
+    public struct MaskInput
+    {
+        public Vector2 pos;
+        public float theta_pos;
+        public float theta_rot;
+    }
+
     public class PokerCurlCover : TouchPlaneBase
     {
         private Vector2 firsttouch;
         private Vector2 Voffest = new Vector2(0.5f, 0.5f);
 
         private MaskObject maskObj_Cover;
+
+        private MaskObject maskObje_Num;
 
         private Transform displayObj;
 
@@ -18,7 +27,8 @@ namespace Rodger
         {
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
 
-            maskObj_Cover = GameObject.Find("MaskObject_DW").GetComponent<MaskObject>();
+            maskObj_Cover = GameObject.Find("MaskObject_Cover").GetComponent<MaskObject>();
+            maskObje_Num = GameObject.Find("MaskObject_Num").GetComponent<MaskObject>();
 
             displayObj = GameObject.Find("Display").transform;
         }
@@ -38,8 +48,10 @@ namespace Rodger
         }
         protected override void OnPanelDrag()
         {
-            //print("OnDrag");
             string str_debug = "";
+            MaskInput maskin_cover = new MaskInput();
+            MaskInput maskin_num = new MaskInput();
+
             Vector2 pos_mouse = m_hit.textureCoord - Voffest;
 
 
@@ -54,20 +66,19 @@ namespace Rodger
             Vector2 dir = -(firsttouch - pos_mouse);
             str_debug += "dir " + dir.x + " " + dir.y + "\nfirsttouch is " + firsttouch + "\npos_mouse is " + pos_mouse + "\n";
 
-            Vector2 pos_half = Vector2.zero;
-            pos_half.x = pos_mouse.x - .5f * dir.magnitude * dir.normalized.x;
-            pos_half.y = pos_mouse.y - .5f * dir.magnitude * dir.normalized.y;
-            str_debug += "pos_half is " + pos_half.x + "," + pos_half.y + "\n";
-            displayObj.transform.localPosition = new Vector3(pos_half.x, pos_half.y, 0);
+            maskin_cover.pos = Vector2.zero;
+            maskin_cover.pos.x = pos_mouse.x - .5f * dir.magnitude * dir.normalized.x;
+            maskin_cover.pos.y = pos_mouse.y - .5f * dir.magnitude * dir.normalized.y;
+            str_debug += "maskin_cover.pos is " + maskin_cover.pos.x + "," + maskin_cover.pos.y + "\n";
+            displayObj.transform.localPosition = new Vector3(maskin_cover.pos.x, maskin_cover.pos.y, 0);
 
-
-            guishow += "pos_half.x is " + pos_half.x + ", " + pos_half.y;
+            guishow += "maskin_cover.pos.x is " + maskin_cover.pos.x + ", " + maskin_cover.pos.y;
 
             //pos_half.x = dir.magnitude * 
             // theta between dir , v(1,0)
-            float theta_pos = GetTheta(Vector2.right, dir);
+            maskin_cover.theta_pos = GetTheta(Vector2.right, dir);
 
-            str_debug += "theta_pos is " + theta_pos + "\n";
+            str_debug += "theta_pos is " + maskin_cover.theta_pos + "\n";
 
             //normal = new Vector2(dir.x * Mathf.Cos(-3.1416 / 2) - dir.y * Mathf.Sin (-3.1416 / 2) , dir.y * Mathf.Cos(-3.1416 / 2) + dir.x * Mathf.Sin (-3.1416 / 2));
             // To simply
@@ -75,14 +86,23 @@ namespace Rodger
 
             str_debug += "normal " + normal.x + " , " + normal.y + "\n";
             // theta between (0,1) , nor
-            float theta_rot = 360 - GetTheta(Vector2.up, normal);
+            maskin_cover.theta_rot = 360 - GetTheta(Vector2.up, normal);
 
-            str_debug += "theta_rot is " + theta_rot + "\n";
+            str_debug += "theta_rot is " + maskin_cover.theta_rot + "\n";
 
-            print(str_debug);
-            if (!float.IsNaN(theta_pos))
-                maskObj_Cover.DoMask(pos_half, theta_pos, -theta_rot);
             #endregion
+            //print(str_debug);
+            if (!float.IsNaN(maskin_cover.theta_pos))
+            {
+                maskObj_Cover.DoMask(maskin_cover.pos, maskin_cover.theta_pos, -maskin_cover.theta_rot);
+
+                Vector2 temp = Vector2.zero;
+                temp.x = firsttouch.x / 400;
+                temp.y = firsttouch.y / 600;
+                Vector2 firstpos_Num = temp;
+                Vector2 greenpos = - maskin_cover.pos;
+                //maskin_num.pos = 
+            }
 
         }
 
@@ -127,7 +147,7 @@ namespace Rodger
                 displayObj.gameObject.SetActive(false);
                 guishow = "";
 
-                maskObj_Cover.ResetMask();
+                maskObj_Cover.ResetMask(Vector2.zero);
             }
         }
 

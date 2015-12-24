@@ -85,7 +85,7 @@ namespace Rodger
                 pos_mouse = Vector2.zero;
                 sw_drag = false;
 
-                maskObj_DW.ResetMask();
+                maskObj_DW.ResetMask(Vector2.zero);
             }
 
             if (sw_drag)

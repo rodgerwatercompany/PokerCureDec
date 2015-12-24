@@ -44,9 +44,9 @@ namespace Rodger
             m_usemaskObj.Cooperation();
         }
         
-        public void ResetMask()
+        public void ResetMask(Vector2 pos)
         {
-            m_Panel.gameObject.transform.localPosition = Vector2.zero;
+            m_Panel.gameObject.transform.localPosition = pos;
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             m_usemaskObj.Cooperation();

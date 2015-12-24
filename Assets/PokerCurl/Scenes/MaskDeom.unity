@@ -98,12 +98,12 @@ GameObject:
   - 114: {fileID: 311681447}
   - 114: {fileID: 311681446}
   m_Layer: 5
-  m_Name: MaskObject_Cover
+  m_Name: MaskObject_Num
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &311681445
 Transform:
   m_ObjectHideFlags: 0
@@ -111,7 +111,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 311681444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 600, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1788587677}
@@ -504,7 +504,7 @@ GameObject:
   - 114: {fileID: 1138300825}
   - 114: {fileID: 1138300826}
   m_Layer: 5
-  m_Name: MaskObject_DW
+  m_Name: MaskObject_Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,7 +644,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3001
+  startingRenderQueue: 3002
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 0
@@ -679,7 +679,7 @@ Transform:
   m_GameObject: {fileID: 1597075789}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .0013869626, y: .0013869626, z: .0013869626}
+  m_LocalScale: {x: .00138888892, y: .00138888892, z: .00138888892}
   m_Children:
   - {fileID: 1307932110}
   - {fileID: 579171507}
