@@ -22,7 +22,7 @@ namespace Rodger
 
 	    }
 
-		public void DoMask(Vector2 pos, float theta_pos, float theta_rotate)
+		public void DoMask(Vector2 pos, float theta_pos, float theta_rotate,Vector2 coVec)
 		{
             /*
             string str = "";
@@ -41,7 +41,7 @@ namespace Rodger
             transform.localRotation = Quaternion.Euler(0,0,theta_rotate);
             transform.localPosition = offset;
             
-            m_usemaskObj.Cooperation();
+            m_usemaskObj.Cooperation(coVec);
         }
         
         public void ResetMask(Vector2 pos)
@@ -49,7 +49,7 @@ namespace Rodger
             m_Panel.gameObject.transform.localPosition = pos;
 
             transform.localRotation = Quaternion.Euler(0, 0, 0);
-            m_usemaskObj.Cooperation();
+            m_usemaskObj.Cooperation(pos);
         }
 	}
 }

@@ -10,7 +10,7 @@ namespace Rodger
         Ray ray;
 
         private Camera m_camera;
-        private MaskObject maskObj_DW;
+        private MaskObject maskObj_Cover;
         
 
         private bool sw_drag;
@@ -28,7 +28,7 @@ namespace Rodger
         {
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
 
-            maskObj_DW = GameObject.Find("MaskObject").GetComponent<MaskObject>();
+            maskObj_Cover = GameObject.Find("MaskObject").GetComponent<MaskObject>();
         }
 
         // Use this for initialization
@@ -85,7 +85,7 @@ namespace Rodger
                 pos_mouse = Vector2.zero;
                 sw_drag = false;
 
-                maskObj_DW.ResetMask(Vector2.zero);
+                maskObj_Cover.ResetMask(Vector2.zero);
             }
 
             if (sw_drag)
@@ -123,7 +123,7 @@ namespace Rodger
 
                         //print(str_debug);
                         if (!float.IsNaN(theta_pos))
-                            maskObj_DW.DoMask(pos, theta_pos, -theta_rot);
+                            maskObj_Cover.DoMask(pos, theta_pos, -theta_rot,Vector2.zero);
                         #endregion
                     }
                 }
