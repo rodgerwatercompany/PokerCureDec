@@ -18,11 +18,10 @@ namespace Rodger
 
         private MaskObject maskObj_Cover;
 
-        private MaskObject maskObje_Num;
-
         private Transform displayObj;
         private Transform displayObj_Num;
         private Transform displayObj_Mouse;
+        private Transform TexObj_Num;
 
         string guishow = "";
         void Awake()
@@ -30,11 +29,11 @@ namespace Rodger
             m_camera = GameObject.Find("Camera").GetComponent<Camera>();
 
             maskObj_Cover = GameObject.Find("MaskObject_Cover").GetComponent<MaskObject>();
-            maskObje_Num = GameObject.Find("MaskObject_Num").GetComponent<MaskObject>();
 
             displayObj = GameObject.Find("Display").transform;
             displayObj_Num = GameObject.Find("Display_1").transform;
             displayObj_Mouse = GameObject.Find("Display_Mouse").transform;
+            TexObj_Num = GameObject.Find("TexObject").transform;
         }
 
         void OnGUI()
@@ -51,12 +50,12 @@ namespace Rodger
             displayObj.gameObject.SetActive(false);
             displayObj_Num.gameObject.SetActive(false);
             displayObj_Mouse.gameObject.SetActive(false);
+            TexObj_Num.gameObject.SetActive(false);
         }
         protected override void OnPanelDrag()
         {
             string str_debug = "";
             MaskInput maskin_cover = new MaskInput();
-            MaskInput maskin_num = new MaskInput();
 
             Vector2 pos_mouse = m_hit.textureCoord - Voffest;
 
@@ -104,38 +103,9 @@ namespace Rodger
                 maskObj_Cover.DoMask(maskin_cover.pos, maskin_cover.theta_pos, -maskin_cover.theta_rot,Vector2.zero);
 
                 str_debug += "******************************\n";
-                Vector2 temp = Vector2.zero;
-                temp.x = firsttouch.x;
-                temp.y = firsttouch.y;
+                
+                TexObj_Num.localPosition = new Vector3(pos_mouse.x + 200, pos_mouse.y - 300, 0);
 
-                Vector2 firstpos_Num = temp;
-
-                str_debug += "firstpos_Num is " + firstpos_Num.x + "," + firstpos_Num.y + "\n";
-                //Vector2 greenpos = - maskin_cover.pos;
-                maskin_num.pos = - maskin_cover.pos;
-                displayObj_Num.localPosition = new Vector3(maskin_num.pos.x, maskin_num.pos.y, 0);
-
-                str_debug += "maskin_num.pos is " + maskin_num.pos.x + "," + maskin_num.pos.y + "\n";
-
-                Vector2 dir_num = maskin_num.pos - firstpos_Num;
-
-                str_debug += "dir_num is " + dir_num.x + "," + dir_num.y + "\n";
-
-                maskin_num.theta_pos = GetTheta(Vector2.right, dir_num);
-                str_debug += "maskin_num.theta_pos is " + maskin_num.theta_pos + "\n";
-
-                Vector2 normal_num = new Vector2(dir_num.y, - dir_num.x);
-
-                str_debug += "normal_num is " + normal_num.x + "," + normal_num.y + "\n";
-
-                maskin_num.theta_rot = 360 - GetTheta(Vector2.up, normal_num);
-
-                str_debug += "maskin_cover.theta_rot is " + maskin_cover.theta_rot + "\n";
-                guishow += "maskin_num.pos is " + maskin_num.pos.x + "," + maskin_num.pos.y + "\n";
-
-                //print(str_debug);
-                //maskObje_Num.DoMask(maskin_num.pos+new Vector2(600-600,0), maskin_num.theta_pos,-maskin_num.theta_rot,new Vector2(600 - 600, 0));
-                //maskin_num.pos = 
             }
 
         }
@@ -175,6 +145,7 @@ namespace Rodger
                     displayObj.gameObject.SetActive(true);
                     displayObj_Num.gameObject.SetActive(true);
                     displayObj_Mouse.gameObject.SetActive(true);
+                    TexObj_Num.gameObject.SetActive(true);
                     guishow = "";
                 }
             }
@@ -183,9 +154,12 @@ namespace Rodger
                 displayObj.gameObject.SetActive(false);
                 displayObj_Num.gameObject.SetActive(false);
                 displayObj_Mouse.gameObject.SetActive(false);
+                TexObj_Num.gameObject.SetActive(false);
                 guishow = "";
 
                 maskObj_Cover.ResetMask(Vector2.zero);
+                TexObj_Num.localPosition = Vector3.zero;
+
                 //maskObje_Num.ResetMask(new Vector2(600 - 600, 0));
             }
         }
