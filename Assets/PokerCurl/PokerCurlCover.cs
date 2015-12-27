@@ -23,6 +23,8 @@ namespace Rodger
         private Transform displayObj_Mouse;
         private Transform TexObj_Num;
 
+		private Vector2 TexObjPos;
+
         string guishow = "";
         void Awake()
         {
@@ -104,7 +106,7 @@ namespace Rodger
 
                 str_debug += "******************************\n";
                 
-                TexObj_Num.localPosition = new Vector3(pos_mouse.x + 200, pos_mouse.y - 300, 0);
+				TexObj_Num.localPosition = new Vector3(pos_mouse.x + TexObjPos.x, pos_mouse.y - TexObjPos.y, 0);
 
             }
 
@@ -141,6 +143,10 @@ namespace Rodger
                     firsttouch.x = 400 * firsttouch.x;
                     firsttouch.y = 600 * firsttouch.y;
                     //print(hit_fixed.x + " " + hit_fixed.y + " , " + hit.textureCoord.x + " " + hit.textureCoord.y);
+
+					TexObjPos = Vector2.zero;
+					TexObjPos.x = firsttouch.x;
+					TexObjPos.y = - firsttouch.y;
 
                     displayObj.gameObject.SetActive(true);
                     displayObj_Num.gameObject.SetActive(true);
