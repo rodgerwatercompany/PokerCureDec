@@ -105,9 +105,29 @@ namespace Rodger
                 maskObj_Cover.DoMask(maskin_cover.pos, maskin_cover.theta_pos, -maskin_cover.theta_rot,Vector2.zero);
 
                 str_debug += "******************************\n";
-                
-				TexObj_Num.localPosition = new Vector3(pos_mouse.x + TexObjPos.x, pos_mouse.y - TexObjPos.y, 0);
 
+                Vector2 tex_center = Vector2.zero;
+                tex_center.x = pos_mouse.x + TexObjPos.x;
+                tex_center.y = pos_mouse.y - TexObjPos.y;
+
+                Vector2 rot_after = Vector2.zero;
+                rot_after.x = (pos_mouse.x * Mathf.Cos(maskin_cover.theta_pos * Mathf.Deg2Rad)) - (pos_mouse.y * Mathf.Sin(maskin_cover.theta_pos * Mathf.Deg2Rad));
+                rot_after.y = (pos_mouse.x * Mathf.Sin(maskin_cover.theta_pos * Mathf.Deg2Rad)) + (pos_mouse.y * Mathf.Sin(maskin_cover.theta_pos * Mathf.Deg2Rad));
+
+                Vector2 pos_delta = Vector2.zero;
+
+                if (rot_after.x > pos_mouse.x)
+                    pos_delta.x = rot_after.x - pos_mouse.x;
+                else
+                    pos_delta.x = pos_mouse.x - rot_after.x;
+
+                if (rot_after.y > pos_mouse.y)
+                    pos_delta.y = rot_after.y - pos_mouse.y;
+                else
+                    pos_delta.y = pos_mouse.y - rot_after.y;
+
+                TexObj_Num.localPosition = new Vector3(tex_center.x + pos_delta.x, tex_center.y + pos_delta.y, 0);
+                TexObj_Num.localRotation = Quaternion.Euler(0, 0, maskin_cover.theta_pos);
             }
 
         }
